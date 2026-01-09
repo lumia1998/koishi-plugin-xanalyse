@@ -45,6 +45,7 @@
 <li>新增抓取失败重试次数配置（fetchRetries）</li>
 <li>新增翻译接口重试次数配置（translateRetries）</li>
 <li>X/Twitter 链接检测功能移出实验性配置</li>
+<li>优化翻译提示词默认预设（不覆盖用户自定义 prompt）</li>
 </ul>
 <p><b>修复说明</b></p>
 <ul>

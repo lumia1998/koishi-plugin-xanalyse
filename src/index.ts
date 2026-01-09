@@ -72,6 +72,8 @@ export const usage = `
 </body>
 `;
 
+const DEFAULT_PROMPT = '你是精通日语与互联网文化的推文翻译专家。请将输入内容翻译为简体中文，仅输出译文，不要附加解释。可适度润色，但需保留原文格式（换行、段落、标点）。保留网址、emoji、#话题标签原样，不翻译人名或其代称。正确理解常见缩写与梗语（如 rkgk = 落書き）。若内容为空、仅含链接、仅占位符或无有效文本，请不要翻译并直接输出空内容。请翻译：{text}';
+
 export interface Config {
   account: string;
   platform: string;
@@ -114,7 +116,7 @@ export const Config = Schema.intersect([
       apiKey: Schema.string().required().description('deepseek apiKey密钥<br>点此链接了解👉https://platform.deepseek.com/api_keys'),
       apiurl: Schema.string().default('https://api.deepseek.com').description('默认为ds官方api接口，支持任意 OpenAI 兼容格式的第三方服务'),
       model: Schema.string().default('deepseek-chat').description('默认为ds官方模型，可根据使用的API服务自行修改'),
-      prompt: Schema.string().role('textarea').default('翻译成简体中文，直接给出翻译结果，不要有多余输出不要修改标点符号，如果遇到网址或者空白内容请不要翻译，请翻译: {text}').description('翻译使用的提示词，使用{text}表示需要翻译的文本'),
+      prompt: Schema.string().role('textarea').default(DEFAULT_PROMPT).description('翻译使用的提示词，使用{text}表示需要翻译的文本'),
       translateRetries: Schema.number().min(1).default(3).description('翻译接口失败时的重试次数')
     }),
     Schema.object({}),
@@ -1007,6 +1009,7 @@ async function getTimeNow() {// 获得当前时间
 async function translate(text: string, ctx, config) { // 翻译推文
   const url = config.apiurl + '/chat/completions';
   const model = config.model
+  const promptTemplate = (config.prompt && config.prompt.trim()) ? config.prompt : DEFAULT_PROMPT;
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${config.apiKey}`,
@@ -1015,7 +1018,7 @@ async function translate(text: string, ctx, config) { // 翻译推文
     model: model,
     messages: [
       // { role: 'system', content: "你是一个翻译助手" },
-      { role: 'user', content: config.prompt.replace('{text}', text) },
+      { role: 'user', content: promptTemplate.replace('{text}', text) },
     ],
     stream: false,
   };
