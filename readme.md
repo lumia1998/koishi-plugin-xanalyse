@@ -39,6 +39,19 @@
 <hr>
 <div class="version">
 <h3>Version</h3>
+<p>1.3.1</p>
+<p><b>功能更新</b></p>
+<ul>
+<li>新增抓取失败重试次数配置（fetchRetries）</li>
+<li>新增翻译接口重试次数配置（translateRetries）</li>
+<li>X/Twitter 链接检测功能移出实验性配置</li>
+<li>优化翻译提示词默认预设（不覆盖用户自定义 prompt）</li>
+</ul>
+<p><b>修复说明</b></p>
+<ul>
+<li>抓取与翻译失败增加重试退避，缓解偶发失败</li>
+<li>无会话场景下不再触发发送报错</li>
+</ul>
 <p>1.3.0</p>
 <ul>
 <li>新增 X/Twitter 链接自动检测功能（可通过 detectXLinks 配置开关）</li>
